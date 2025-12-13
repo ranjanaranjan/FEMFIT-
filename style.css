@@ -294,7 +294,7 @@ body {
     cursor: pointer;
 }
 
-/* --- NEW: Size Selection Styling --- */
+/* --- Size Selection Styling --- */
 .size-options {
     margin-bottom: 15px;
 }
@@ -591,23 +591,67 @@ body {
 }
 
 
-/* --- MOBILE/TABLET RESPONSIVENESS --- */
+/* --- MOBILE/TABLET RESPONSIVENESS (CORRECTED) --- */
 @media (max-width: 768px) {
-    .filter-toggle-btn {
-        top: 10px; 
-        left: 5%;
-        position: absolute;
+    
+    /* 1. HEADER & SEARCH FIX */
+    .main-header {
+        flex-direction: column; /* Stack header elements */
+        align-items: flex-start;
+        padding: 10px 5%;
+    }
+
+    .header-controls {
+        width: 100%;
+        margin-top: 10px;
+        flex-direction: row; /* Keep search and cart button side-by-side */
+        justify-content: space-between;
+    }
+
+    .search-bar {
+        width: calc(65% - 15px); /* Give search bar a majority of the space */
     }
     
+    .cart-btn {
+        width: 35%; 
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+    
+    /* Adjust Main Content to account for the stacked header */
     .main-layout {
-        padding-top: 50px; 
+        width: 95%; /* Adjust width for smaller screens */
+        padding-top: 20px;
+    }
+    
+    /* 2. FILTER TOGGLE POSITION FIX */
+    .filter-toggle-btn {
+        top: 125px; 
+        position: absolute; /* Change to absolute so it scrolls with content */
+        left: 5%;
+        margin-bottom: 15px;
+    }
+    
+    /* 3. PRODUCT LISTING GRID ADJUSTMENT */
+    /* Ensure product listing starts below the floating filter button */
+    #product-listing, #category-grid {
+        margin-top: 50px; 
+        /* Fallback grid for 768px */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
     }
     
     .category-card {
-        height: 250px; 
+        height: 250px; /* Smaller height for category cards */
     }
 
-    /* Stack footer columns on mobile */
+    /* 4. CART SIDEBAR ADJUSTMENT */
+    .cart-sidebar {
+        width: 90%; /* Take up most of the screen width on mobile */
+        max-width: 350px; 
+    }
+
+    /* 5. FOOTER FIXES */
     .footer-content {
         flex-direction: column;
         gap: 20px;
@@ -624,7 +668,7 @@ body {
     }
 
     .newsletter-form {
-        max-width: 300px;
+        max-width: 90%; 
         margin: 15px auto 0; 
     }
 
@@ -636,5 +680,21 @@ body {
     }
     .quick-links li {
         margin-bottom: 0;
+    }
+}
+
+/* Extra breakpoint for very small phones */
+@media (max-width: 480px) {
+    #product-listing {
+        grid-template-columns: 1fr; /* Single column view for small phones */
+    }
+    
+    .product-card img {
+        height: 250px; 
+    }
+    
+    .size-selector {
+        flex-wrap: wrap; /* Wrap size buttons if they overflow */
+        gap: 5px;
     }
 }

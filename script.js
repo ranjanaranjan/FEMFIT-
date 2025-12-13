@@ -476,7 +476,7 @@ const handleOrderCompletion = (e) => {
     // 2. Display the confirmation message on the main page
     checkoutConfirmation.innerHTML = `
         <h3>🎉 Order Successful!</h3>
-        <p>Thank you, **${customerName}**! Your order totaling <strong>${finalTotal}</strong> has been placed.</p>
+        <p>Thank thank you, **${customerName}**! Your order totaling <strong>${finalTotal}</strong> has been placed.</p>
         <p>Shipping to: ${shippingAddress} | Payment via: ${paymentMethod === 'cod' ? 'Cash on Delivery' : 'Card'}.</p>
         <p>We have sent a confirmation email with tracking details. You can continue shopping below.</p>
     `;
