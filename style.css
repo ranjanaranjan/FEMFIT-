@@ -600,13 +600,11 @@ body {
         flex-direction: column; 
         align-items: flex-start;
         padding: 10px 5%;
-        /* Ensure the header is wide enough to contain controls */
         width: 100%; 
         box-sizing: border-box;
     }
 
     .header-controls {
-        /* This whole section contains search bar and cart button */
         width: 100%;
         margin-top: 10px;
         flex-direction: row; 
@@ -625,7 +623,6 @@ body {
     
     /* 2. FILTER TOGGLE FIX: Move the button off the sticky header and back into the normal flow */
     .filter-toggle-btn {
-        /* Set desktop fixed properties back to default */
         position: static; 
         top: auto; 
         left: auto;
@@ -633,21 +630,18 @@ body {
         /* Make it full width and add a small top margin to separate it from the search/cart block */
         width: 90%; 
         margin: 10px auto 15px auto; /* Centered, with margin top/bottom */
-        display: flex; /* Keep the display property */
+        display: flex; 
         
-        /* Ensure it's not trying to float */
         z-index: 1; 
     }
     
     /* 3. MAIN LAYOUT ADJUSTMENTS */
     .main-layout {
         width: 95%; 
-        /* Remove the top padding we added previously since the filter button is no longer overlapping */
         padding-top: 0; 
     }
     
-    /* Remove unnecessary large top margin from the main content, 
-       as the filter button is now pushing it down naturally. */
+    /* Remove unnecessary large top margin from the main content */
     #product-listing, #category-grid {
         margin-top: 0; 
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -658,13 +652,13 @@ body {
         height: 250px;
     }
 
-    /* 4. CART SIDEBAR ADJUSTMENT (Unchanged) */
+    /* 4. CART SIDEBAR ADJUSTMENT */
     .cart-sidebar {
         width: 90%; 
         max-width: 350px; 
     }
 
-    /* 5. FOOTER FIXES (Unchanged) */
+    /* 5. FOOTER FIXES */
     .footer-content {
         flex-direction: column;
         gap: 20px;
@@ -696,7 +690,7 @@ body {
     }
 }
 
-/* Extra breakpoint for very small phones (Unchanged) */
+/* Extra breakpoint for very small phones */
 @media (max-width: 480px) {
     #product-listing {
         grid-template-columns: 1fr;

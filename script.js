@@ -1,544 +1,428 @@
-// script.js
+// Data for products and categories
+const products = [
+    { id: 1, name: "Aqua Embroidered Kurti", price: 1800, originalPrice: 2400, category: "Kurtis", group: "Festive", image: "https://via.placeholder.com/300x400/81C784/ffffff?text=Aqua+Kurti" },
+    { id: 2, name: "Black Silk Saree", price: 4500, originalPrice: 5000, category: "Sarees", group: "Formal", image: "https://via.placeholder.com/300x400/000000/ffffff?text=Black+Saree" },
+    { id: 3, name: "Mustard Palazzo Set", price: 2900, originalPrice: null, category: "Suits", group: "Casual", image: "https://via.placeholder.com/300x400/FFC107/000000?text=Mustard+Suit" },
+    { id: 4, name: "Men's Navy Quilted Jacket", price: 3500, originalPrice: 5900, category: "Jackets", group: "Winter Wear", sale: true, image: "https://via.placeholder.com/300x400/0D47A1/ffffff?text=Navy+Jacket" },
+    { id: 5, name: "Pink Floral Lehenga", price: 7800, originalPrice: null, category: "Lehengas", group: "Festive", image: "https://via.placeholder.com/300x400/F48FB1/ffffff?text=Pink+Lehenga" },
+    { id: 6, name: "Grey Sweater Dress", price: 1999, originalPrice: 3999, category: "Sweaters", group: "Winter Wear", sale: true, image: "https://via.placeholder.com/300x400/9E9E9E/ffffff?text=Grey+Dress" },
+    { id: 7, name: "Denim Trousers", price: 1200, originalPrice: null, category: "Bottoms", group: "Casual", image: "https://via.placeholder.com/300x400/42A5F5/ffffff?text=Denim+Pants" },
+    { id: 8, name: "Red Party Dress", price: 2100, originalPrice: 3200, category: "Dresses", group: "Formal", image: "https://via.placeholder.com/300x400/F44336/ffffff?text=Red+Dress" }
+];
 
-// 1. GLOBAL STATE
-const products = JSON.parse(document.getElementById('product-data').textContent);
-// Cart items now store an ID and a SIZE (which makes them unique)
-let cart = []; 
-let currentFilters = new Set(); 
-let currentSearchTerm = ''; 
-let currentSort = 'default'; 
-const CURRENCY_SYMBOL = '₹'; 
+const categories = [
+    { name: "Kurtis", image: "https://via.placeholder.com/500x500/81C784/ffffff?text=Kurtis", group: "Casual" },
+    { name: "Sarees", image: "https://via.placeholder.com/500x500/000000/ffffff?text=Sarees", group: "Formal" },
+    { name: "Suits", image: "https://via.placeholder.com/500x500/FFC107/000000?text=Suits", group: "Festive" },
+    { name: "Jackets", image: "https://via.placeholder.com/500x500/0D47A1/ffffff?text=Jackets", group: "Winter Wear" },
+    { name: "Lehengas", image: "https://via.placeholder.com/500x500/F48FB1/ffffff?text=Lehengas", group: "Festive" },
+    { name: "Dresses", image: "https://via.placeholder.com/500x500/F44336/ffffff?text=Dresses", group: "Formal" }
+];
 
-// 2. DOM Elements
-const categoryGrid = document.getElementById('category-grid'); 
-const productListing = document.getElementById('product-listing'); 
-const productDisplayArea = document.getElementById('product-display'); 
-const categoryFiltersContainer = document.getElementById('category-filters');
-const resetFiltersBtn = document.getElementById('reset-filters');
-const searchInput = document.getElementById('search-input'); 
-const cartCountSpan = document.getElementById('cart-count');
-const cartTotalSpan = document.getElementById('cart-total');
-const cartList = document.getElementById('cart-items');
-const cartSummary = document.getElementById('cart-summary'); 
-const cartToggleBtn = document.getElementById('cart-toggle-btn');
-const cartCloseBtn = document.getElementById('cart-close-btn');
-const filterToggleBtn = document.getElementById('filter-toggle-btn');
-const filterSidebar = document.getElementById('filter-sidebar');
-const backBtnContainer = document.getElementById('back-to-categories-container');
-const backBtn = document.getElementById('back-to-categories-btn');
-const sortControls = document.getElementById('sort-controls'); 
-const sortBySelect = document.getElementById('sort-by');         
-const checkoutConfirmation = document.getElementById('checkout-confirmation'); 
+let cart = [];
+let currentCategory = null;
 
-// CHECKOUT DOM ELEMENTS
-const cartView = document.getElementById('cart-view');
-const checkoutFormView = document.getElementById('checkout-form-view');
-const proceedToInfoBtn = document.getElementById('proceed-to-info-btn'); 
-const backToCartBtn = document.getElementById('back-to-cart-btn');
-const shippingForm = document.getElementById('shipping-form');
+// --- Initial Render Functions ---
 
-// --- DEFINITION FOR ORGANIZED FILTER GROUPS ---
-const categoryGroups = {
-    "Kurtis": ["Cotton Kurti", "Silk Kurti", "Heavy Worked Kurti"],
-    "Sarees": ["Cotton Sarees", "Silk Sarees", "Tissue Sarees", "Worked Sarees"],
-    "Jeans": ["Baggy Jeans", "Skinny Fit Jeans", "Mom Fit Jeans"],
-    "Skirts": ["Skirts"], 
-    "Winter Wear": ["Winterwear"], 
-    "Accessories": ["Accessories"],
-    "Dresses": ["Dresses"]
-};
+function renderCategories() {
+    const grid = document.getElementById('category-grid');
+    grid.innerHTML = '';
+    categories.forEach(cat => {
+        const card = document.createElement('div');
+        card.className = 'category-card';
+        card.setAttribute('data-group', cat.group);
+        card.onclick = () => showProductsByCategory(cat.name);
+        
+        let saleBadge = '';
+        if (cat.group === "Winter Wear") {
+            saleBadge = '<div class="winter-offer-text">Up to 50% OFF!</div>';
+        }
 
-// --- IMAGES FOR CATEGORY CARDS (Simplified for brevity in JS) ---
-const categoryImages = {
-    "Kurtis": "https://images.meesho.com/images/products/508308303/a6n3y_512.webp?width=512", 
-    "Sarees": "https://www.devnaagri.com/cdn/shop/files/CelebWebsite2292.jpg?v=1751947543", 
-    "Jeans": "https://www.only.in/cdn/shop/files/900742401_g0.jpg?v=1745910181&width=2048", 
-    "Skirts": "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/24865792/2023/10/4/2f7f7251-0d0b-4cb5-b0ce-19acbe3f57771696415933351-Anayna-Women-Printed-A-Line-Flared-Cotton-Maxi-Skirt-3831696-7.jpg", 
-    "Winter Wear": "https://i.pinimg.com/564x/a1/16/d4/a116d40a67ba038bad52bbad20c49a76.jpg", 
-    "Accessories": "https://cdn.shopify.com/s/files/1/0640/5167/5359/files/Stan_Mirror_Interlink_Choker_480x480.png?v=1715671789", 
-    "Dresses": "https://www.ordinaree.com/cdn/shop/files/SV-20230723-0357_de076a15-0015-48c9-aa62-505fcbf62ee7.jpg?v=1756703329" 
-};
+        card.innerHTML = `
+            ${saleBadge}
+            <img src="${cat.image}" alt="${cat.name}">
+            <div class="category-title">${cat.name}</div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+function renderProductListing(productList) {
+    const listing = document.getElementById('product-listing');
+    listing.innerHTML = '';
+    
+    if (productList.length === 0) {
+        listing.innerHTML = '<p style="text-align: center; font-size: 1.2em; color: var(--secondary-text);">No products found matching your criteria.</p>';
+        return;
+    }
+
+    productList.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        
+        const priceHTML = product.originalPrice 
+            ? `<span class="original-price">₹${product.originalPrice.toFixed(2)}</span> <span class="sale-price">₹${product.price.toFixed(2)}</span>`
+            : `₹${product.price.toFixed(2)}`;
+
+        const sizeOptionsHTML = generateSizeOptions(product.id);
+
+        const saleBadge = product.sale ? '<span class="sale-badge">SALE</span>' : '';
+
+        card.innerHTML = `
+            ${saleBadge}
+            <img src="${product.image}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <div class="price-container">${priceHTML}</div>
+            
+            <div class="size-options">
+                <p>Select Size:</p>
+                <div class="size-selector">
+                    ${sizeOptionsHTML}
+                </div>
+            </div>
+
+            <button class="add-btn" onclick="addToCart(${product.id})">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+            </button>
+        `;
+        listing.appendChild(card);
+    });
+}
+
+function generateSizeOptions(productId) {
+    const sizes = ['S', 'M', 'L', 'XL']; // Example fixed sizes
+    return sizes.map(size => `
+        <input type="radio" id="size-${productId}-${size}" name="size-${productId}" class="size-radio" value="${size}">
+        <label for="size-${productId}-${size}" class="size-label">${size}</label>
+    `).join('');
+}
 
 
-// --- UTILITY FUNCTIONS ---
+// --- View Switching and Navigation ---
 
-const formatCurrency = (price) => {
-    return `${CURRENCY_SYMBOL}${price.toLocaleString('en-IN', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
-};
+function showProductsByCategory(categoryName) {
+    currentCategory = categoryName;
+    document.getElementById('category-grid').style.display = 'none';
+    document.getElementById('product-listing').style.display = 'grid';
+    
+    // Clear the search bar when switching from category view
+    document.getElementById('search-input').value = ''; 
+    
+    // Set category filter state (uncheck all, then check the selected one)
+    const categoryInputs = document.querySelectorAll('#category-filter input[type="checkbox"]');
+    categoryInputs.forEach(input => {
+        input.checked = false;
+        if (input.value === categoryName) {
+            input.checked = true;
+        }
+    });
 
-/**
- * Sorts the product array based on the currentSort value.
- */
-const sortProducts = (productsArray) => {
-    switch (currentSort) {
-        case 'name-asc':
-            return productsArray.sort((a, b) => a.name.localeCompare(b.name));
+    applyFilters();
+}
+
+function showCategoryView() {
+    currentCategory = null;
+    document.getElementById('product-listing').style.display = 'none';
+    document.getElementById('category-grid').style.display = 'grid';
+    // Reset filters on returning to category view
+    resetFilters();
+    renderProductListing(products); // Render all products in the background
+}
+
+// --- Filtering and Sorting ---
+
+function populateCategoryFilter() {
+    const filterDiv = document.getElementById('category-filter');
+    filterDiv.innerHTML = '';
+    const uniqueCategories = [...new Set(products.map(p => p.category))].sort();
+
+    uniqueCategories.forEach(cat => {
+        filterDiv.innerHTML += `
+            <label><input type="checkbox" name="filter-category" value="${cat}"> ${cat}</label><br>
+        `;
+    });
+}
+
+function updatePriceDisplay() {
+    const priceRange = document.getElementById('price-range');
+    document.getElementById('price-display').textContent = priceRange.value;
+}
+
+function applyFilters() {
+    const searchVal = document.getElementById('search-input').value.toLowerCase();
+    const maxPrice = parseInt(document.getElementById('price-range').value);
+    
+    const selectedCategories = Array.from(document.querySelectorAll('#category-filter input:checked'))
+                                     .map(input => input.value);
+    
+    const selectedStyles = Array.from(document.querySelectorAll('#style-filter input:checked'))
+                                 .map(input => input.value);
+
+    let filteredProducts = products.filter(product => {
+        const matchesSearch = product.name.toLowerCase().includes(searchVal) || 
+                              product.category.toLowerCase().includes(searchVal);
+        
+        const matchesPrice = product.price <= maxPrice;
+        
+        const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
+        
+        const matchesStyle = selectedStyles.length === 0 || selectedStyles.includes(product.group);
+        
+        // If coming from a category click, only show that category's products
+        const matchesCurrentCategory = currentCategory === null || product.category === currentCategory;
+
+        return matchesSearch && matchesPrice && matchesCategory && matchesStyle && matchesCurrentCategory;
+    });
+
+    sortProducts(filteredProducts);
+    
+    // If the filter is applied, and no category was specifically clicked, switch to product view
+    if (currentCategory === null && (searchVal || selectedCategories.length > 0 || selectedStyles.length > 0 || maxPrice < 10000)) {
+        document.getElementById('category-grid').style.display = 'none';
+        document.getElementById('product-listing').style.display = 'grid';
+    } else if (currentCategory === null && searchVal === '' && selectedCategories.length === 0 && selectedStyles.length === 0 && maxPrice === 10000) {
+        // If all filters and search are clear, show category view
+        showCategoryView(); 
+    }
+}
+
+function sortProducts(productList = null) {
+    let listToSort = productList || products;
+
+    // If productList is null, we need to re-apply filters first to get the current list
+    if (productList === null) {
+        const searchVal = document.getElementById('search-input').value.toLowerCase();
+        const maxPrice = parseInt(document.getElementById('price-range').value);
+        const selectedCategories = Array.from(document.querySelectorAll('#category-filter input:checked')).map(input => input.value);
+        const selectedStyles = Array.from(document.querySelectorAll('#style-filter input:checked')).map(input => input.value);
+
+        listToSort = products.filter(product => {
+            const matchesSearch = product.name.toLowerCase().includes(searchVal) || product.category.toLowerCase().includes(searchVal);
+            const matchesPrice = product.price <= maxPrice;
+            const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
+            const matchesStyle = selectedStyles.length === 0 || selectedStyles.includes(product.group);
+            const matchesCurrentCategory = currentCategory === null || product.category === currentCategory;
+            return matchesSearch && matchesPrice && matchesCategory && matchesStyle && matchesCurrentCategory;
+        });
+    }
+
+    const sortType = document.getElementById('sort-by').value;
+
+    switch (sortType) {
         case 'price-asc':
-            return productsArray.sort((a, b) => a.price - b.price);
+            listToSort.sort((a, b) => a.price - b.price);
+            break;
         case 'price-desc':
-            return productsArray.sort((a, b) => b.price - a.price);
+            listToSort.sort((a, b) => b.price - a.price);
+            break;
+        case 'name-asc':
+            listToSort.sort((a, b) => a.name.localeCompare(b.name));
+            break;
         case 'default':
         default:
-            return productsArray.sort((a, b) => a.id - b.id); 
+            // Optional: Sort by ID or original index for stable default view
+            listToSort.sort((a, b) => a.id - b.id);
+            break;
     }
-};
 
+    renderProductListing(listToSort);
+}
 
-// --- VIEW/NAVIGATION HANDLERS ---
-
-const showCheckoutForm = () => {
-    if (cart.length === 0) {
-        alert('Your cart is empty. Please add items before checking out.');
-        return;
-    }
-    cartView.style.display = 'none';
-    checkoutFormView.style.display = 'block';
-};
-
-const showCartView = () => {
-    cartView.style.display = 'block';
-    checkoutFormView.style.display = 'none';
-};
-
-// Toggles the visibility of the filter sidebar
-const toggleFilterVisibility = () => {
-    filterSidebar.classList.toggle('visible');
+function resetFilters() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('price-range').value = 10000;
+    updatePriceDisplay();
     
-    if (filterSidebar.classList.contains('visible')) {
-        filterToggleBtn.innerHTML = '<span class="hamburger-icon">✖</span> Hide Filters';
-    } else {
-        filterToggleBtn.innerHTML = '<span class="hamburger-icon">☰</span> Filter Options';
-    }
-};
-
-// Hides the filter if it's visible.
-const hideFilterSidebar = () => {
-    if (filterSidebar.classList.contains('visible')) {
-        toggleFilterVisibility();
-    }
-};
-
-// Toggles Cart visibility AND resets to the initial cart view
-const toggleCartVisibility = () => {
-    cartSummary.classList.toggle('visible');
-    // Always reset to the cart list view when opening/closing
-    showCartView(); 
-    // Hide confirmation message when cart is toggled
-    checkoutConfirmation.style.display = 'none'; 
-};
+    document.querySelectorAll('#category-filter input[type="checkbox"]').forEach(input => input.checked = false);
+    document.querySelectorAll('#style-filter input[type="checkbox"]').forEach(input => input.checked = false);
+    document.getElementById('sort-by').value = 'default';
+}
 
 
-// --- RENDERING FUNCTIONS ---
+// --- Cart Functions ---
 
-const renderCategoryGrid = () => {
-    categoryGrid.innerHTML = '';
-    productListing.innerHTML = '';
-    categoryGrid.style.display = 'grid'; 
-    productListing.style.display = 'none'; 
-    backBtnContainer.style.display = 'none'; 
-    sortControls.style.display = 'none';     
-    checkoutConfirmation.style.display = 'none'; 
-    
-    // Reset state
-    currentFilters.clear();
-    searchInput.value = '';
-    currentSearchTerm = '';
-    currentSort = 'default';                 
-    sortBySelect.value = 'default';          
-    renderFilters(); 
-    
-    for (const groupName in categoryImages) {
-        const imageURL = categoryImages[groupName];
-        
-        let offerOverlay = '';
-        if (groupName === "Winter Wear") {
-            offerOverlay = '<div class="winter-offer-text">50% OFF WINTER SALE!</div>';
-        }
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    const selectedSizeInput = document.querySelector(`input[name="size-${productId}"]:checked`);
 
-        const cardHTML = `
-            <div class="category-card" data-group="${groupName}">
-                ${offerOverlay}
-                <img src="${imageURL}" alt="${groupName} Collection" loading="lazy">
-                <div class="category-title">${groupName}</div>
-            </div>
-        `;
-        categoryGrid.insertAdjacentHTML('beforeend', cardHTML);
-    }
-};
-
-const renderProductListing = () => {
-    categoryGrid.innerHTML = '';
-    productListing.innerHTML = '';
-    categoryGrid.style.display = 'none'; 
-    productListing.style.display = 'grid'; 
-    backBtnContainer.style.display = 'block'; 
-    sortControls.style.display = 'flex';     
-    checkoutConfirmation.style.display = 'none'; 
-
-    const term = currentSearchTerm.toLowerCase();
-    
-    // 1. Filter products
-    let filteredProducts = products.filter(product => {
-        const passesSearchFilter = !term || 
-                                   product.name.toLowerCase().includes(term) ||
-                                   product.description.toLowerCase().includes(term);
-        
-        const passesCategoryFilter = (currentFilters.size === 0) || currentFilters.has(product.category);
-
-        return passesSearchFilter && passesCategoryFilter;
-    });
-
-    // 2. Sort products
-    filteredProducts = sortProducts([...filteredProducts]);
-
-
-    if (filteredProducts.length === 0) {
-        productListing.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--text-primary);">No products match your current filters or search term.</p>';
+    if (!selectedSizeInput) {
+        alert("Please select a size before adding to cart.");
         return;
     }
 
-    // 3. Render product cards
-    filteredProducts.forEach(product => {
-        // Build the size selector UI
-        const sizeSelectorHTML = product.sizes.map(size => {
-            const inputId = `size-${product.id}-${size}`;
-            return `
-                <input type="radio" name="size-${product.id}" id="${inputId}" class="size-radio" value="${size}">
-                <label for="${inputId}" class="size-label">${size}</label>
-            `;
-        }).join('');
-        
-        
-        let priceDisplay = `<span class="price-container">${formatCurrency(product.price)}</span>`;
-        let saleBadge = '';
-
-        if (product.is_on_sale) {
-            priceDisplay = `
-                <span class="price-container">
-                    <span class="original-price">${formatCurrency(product.original_price)}</span>
-                    <span class="sale-price">${formatCurrency(product.price)}</span>
-                </span>
-            `;
-            saleBadge = '<div class="sale-badge">SALE</div>';
-        }
-
-        const productHTML = `
-            <div class="product-card" data-id="${product.id}" data-category="${product.category}">
-                ${saleBadge}
-                <img src="${product.image}" alt="${product.name}" loading="lazy">
-                <h4>${product.name}</h4>
-                ${priceDisplay}
-                
-                <div class="size-options">
-                    <div class="size-selector" data-product-id="${product.id}">
-                        ${sizeSelectorHTML}
-                    </div>
-                </div>
-                
-                <button class="add-btn" data-id="${product.id}">Add to Cart</button>
-            </div>
-        `;
-        productListing.insertAdjacentHTML('beforeend', productHTML);
-    });
-};
-
-const renderFilters = () => {
-    categoryFiltersContainer.innerHTML = ''; 
-
-    for (const groupName in categoryGroups) {
-        const subCategories = categoryGroups[groupName];
-        
-        const groupHeader = document.createElement('h4');
-        groupHeader.textContent = groupName;
-        groupHeader.style.marginTop = '15px';
-        groupHeader.style.cursor = 'pointer';
-        groupHeader.dataset.group = groupName; 
-        groupHeader.classList.add('filter-group-header'); 
-        categoryFiltersContainer.appendChild(groupHeader);
-        
-        subCategories.forEach(category => {
-            const hasProducts = products.some(p => p.category === category);
-            
-            if (hasProducts) {
-                const checkboxId = `filter-${category.replace(/\s/g, '-')}`;
-                const isChecked = currentFilters.has(category) ? 'checked' : '';
-                
-                const filterHTML = `
-                    <label style="display: block; margin-bottom: 5px; font-size: 0.95em;">
-                        <input type="checkbox" id="${checkboxId}" data-category="${category}" data-group="${groupName}" ${isChecked}>
-                        ${category}
-                    </label>
-                `;
-                categoryFiltersContainer.insertAdjacentHTML('beforeend', filterHTML);
-            }
-        });
-    }
-};
-
-// Renders the cart UI, including the new quantity controls
-const updateCartUI = () => {
-    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-    cartCountSpan.textContent = totalItems;
-    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    cartTotalSpan.textContent = formatCurrency(totalPrice);
-    
-    cartList.innerHTML = '';
-    if (cart.length === 0) {
-        cartList.innerHTML = '<li style="color: var(--secondary-text);">Your cart is empty.</li>';
-        proceedToInfoBtn.disabled = true; // Disable checkout button if cart is empty
-        proceedToInfoBtn.style.opacity = 0.6;
-    } else {
-        proceedToInfoBtn.disabled = false;
-        proceedToInfoBtn.style.opacity = 1;
-        cart.forEach(item => {
-            const itemTotal = item.price * item.qty;
-            // Key update: Display size in cart and add size data attribute to buttons
-            const itemHTML = `
-                <li data-id="${item.id}" data-size="${item.size}">
-                    <div class="cart-item-details">
-                        <span class="item-name">${item.name}</span>
-                        <span class="item-size">Size: ${item.size}</span>
-                    </div>
-                    <div class="cart-qty-controls">
-                        <button class="qty-btn qty-decrease" data-id="${item.id}" data-size="${item.size}">-</button>
-                        <span class="qty-display">${item.qty}</span>
-                        <button class="qty-btn qty-increase" data-id="${item.id}" data-size="${item.size}">+</button>
-                        <span style="min-width: 80px; text-align: right;">${formatCurrency(itemTotal)}</span>
-                    </div>
-                </li>
-            `;
-            cartList.insertAdjacentHTML('beforeend', itemHTML);
-        });
-    }
-};
-
-
-// --- HANDLER FUNCTIONS ---
-
-const handleSortChange = (e) => {
-    currentSort = e.target.value;
-    renderProductListing();
-};
-
-const handleCategoryCardClick = (e) => {
-    const card = e.target.closest('.category-card');
-    if (!card) return;
-
-    const groupName = card.dataset.group;
-    const subCategories = categoryGroups[groupName];
-    
-    currentFilters.clear();
-    subCategories.forEach(cat => currentFilters.add(cat));
-    
-    renderProductListing();
-    renderFilters(); 
-    hideFilterSidebar();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-const handleSearchInput = (e) => {
-    currentSearchTerm = e.target.value;
-    if (currentSearchTerm !== '' || currentFilters.size > 0) {
-        renderProductListing(); 
-    } else {
-        renderCategoryGrid();
-    }
-};
-
-const handleFilterChange = (e) => {
-    if (e.target.type !== 'checkbox') return;
-
-    const category = e.target.dataset.category;
-
-    if (e.target.checked) {
-        currentFilters.add(category); 
-    } else {
-        currentFilters.delete(category);
-    }
-    
-    renderFilters(); 
-    if (currentFilters.size === 0 && currentSearchTerm === '') {
-        renderCategoryGrid();
-    } else {
-        renderProductListing(); 
-    }
-};
-
-const handleResetFilters = () => {
-    renderCategoryGrid();
-    hideFilterSidebar();
-};
-
-const handleGroupHeaderClick = (e) => {
-    if (!e.target.classList.contains('filter-group-header')) return;
-
-    const groupName = e.target.dataset.group;
-    const subCategories = categoryGroups[groupName];
-    
-    const areAllActive = subCategories.every(cat => currentFilters.has(cat));
-    
-    if (areAllActive) {
-        subCategories.forEach(cat => currentFilters.delete(cat));
-    } else {
-        subCategories.forEach(cat => currentFilters.add(cat));
-    }
-    
-    renderFilters(); 
-    if (currentFilters.size > 0 || currentSearchTerm !== '') {
-        renderProductListing();
-    } else {
-        renderCategoryGrid();
-    }
-};
-
-// --- CART FUNCTIONS ---
-
-/**
- * Finds item in cart using both ID and Size
- */
-const findCartItem = (productId, size) => {
-    return cart.find(item => item.id == productId && item.size === size);
-};
-
-/**
- * Changes the quantity of an item in the cart, identified by ID and size.
- * @param {number} productId - The ID of the product.
- * @param {string} size - The selected size.
- * @param {number} change - +1 for increment, -1 for decrement.
- */
-const changeItemQuantity = (productId, size, change) => {
-    const itemIndex = cart.findIndex(item => item.id == productId && item.size === size);
-    
-    if (itemIndex > -1) {
-        cart[itemIndex].qty += change;
-        
-        if (cart[itemIndex].qty <= 0) {
-            // Remove item if quantity hits zero
-            cart.splice(itemIndex, 1);
-        }
-    }
-    updateCartUI();
-};
-
-/**
- * Handles adding an item, checking for selected size first.
- * @param {number} productId - The ID of the product.
- * @param {HTMLElement} productCard - The containing product card element.
- */
-const handleAddToCart = (productId, productCard) => {
-    // 1. Get selected size
-    const selectedSizeRadio = productCard.querySelector(`input[name="size-${productId}"]:checked`);
-    
-    if (!selectedSizeRadio) {
-        alert('Please select a size before adding to cart.');
-        return;
-    }
-    
-    const selectedSize = selectedSizeRadio.value;
-    
-    // 2. Find product details
-    const productToAdd = products.find(p => p.id == productId);
-    
-    // 3. Check if this specific ID + SIZE combination already exists
-    const existingItem = findCartItem(productId, selectedSize);
+    const size = selectedSizeInput.value;
+    const existingItem = cart.find(item => item.id === productId && item.size === size);
 
     if (existingItem) {
-        existingItem.qty += 1;
+        existingItem.quantity++;
     } else {
-        const cartItem = { 
-            id: productToAdd.id, 
-            name: productToAdd.name, 
-            price: productToAdd.price, 
-            qty: 1,
-            size: selectedSize // Store the size!
-        };
-        cart.push(cartItem);
+        cart.push({
+            id: productId,
+            name: product.name,
+            price: product.price,
+            size: size,
+            quantity: 1,
+            image: product.image 
+        });
     }
-    updateCartUI();
-};
+
+    updateCartDisplay();
+    toggleCartSidebar(true); // Open the cart sidebar on adding item
+}
+
+function removeFromCart(productId, size) {
+    cart = cart.filter(item => !(item.id === productId && item.size === size));
+    updateCartDisplay();
+}
+
+function updateQuantity(productId, size, delta) {
+    const item = cart.find(item => item.id === productId && item.size === size);
+    if (item) {
+        item.quantity += delta;
+        if (item.quantity <= 0) {
+            removeFromCart(productId, size);
+        }
+        updateCartDisplay();
+    }
+}
+
+function updateCartDisplay() {
+    const cartList = document.getElementById('cart-list');
+    const cartCountSpan = document.getElementById('cart-count');
+    const cartTotalSpan = document.getElementById('cart-total');
+    let total = 0;
+
+    cartList.innerHTML = '';
+
+    if (cart.length === 0) {
+        cartList.innerHTML = '<p style="text-align: center; color: var(--secondary-text); padding: 20px;">Your cart is empty.</p>';
+        document.getElementById('checkout-view-btn').disabled = true;
+    } else {
+        document.getElementById('checkout-view-btn').disabled = false;
+    }
+
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+            <div style="display:flex; align-items: center; gap: 10px;">
+                <img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                <div class="cart-item-details">
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-size">Size: ${item.size}</span>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <span style="font-weight: 600;">₹${itemTotal.toFixed(2)}</span>
+                <div class="cart-qty-controls">
+                    <button class="qty-btn" onclick="updateQuantity(${item.id}, '${item.size}', -1)">-</button>
+                    <span class="qty-display">${item.quantity}</span>
+                    <button class="qty-btn" onclick="updateQuantity(${item.id}, '${item.size}', 1)">+</button>
+                </div>
+            </div>
+        `;
+        cartList.appendChild(listItem);
+    });
+
+    cartCountSpan.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartTotalSpan.textContent = total.toFixed(2);
+    document.getElementById('order-total-display').textContent = total.toFixed(2);
+}
+
+// --- Sidebar and View Toggle Functions ---
+
+function toggleCartSidebar(show = null) {
+    const sidebar = document.getElementById('cart-sidebar');
+    if (show === null) {
+        sidebar.classList.toggle('visible');
+    } else if (show) {
+        sidebar.classList.add('visible');
+    } else {
+        sidebar.classList.remove('visible');
+    }
+    // Always default to cart list view when opening/closing
+    showCartListView(); 
+}
+
+function toggleFilterSidebar() {
+    document.getElementById('filter-sidebar').classList.toggle('visible');
+}
+
+function showCheckoutView() {
+    if (cart.length === 0) {
+        alert("Your cart is empty. Please add items before checking out.");
+        return;
+    }
+    document.getElementById('cart-list-view').style.display = 'none';
+    document.getElementById('checkout-form-view').style.display = 'block';
+    document.getElementById('confirmation-view').style.display = 'none';
+}
+
+function showCartListView() {
+    document.getElementById('cart-list-view').style.display = 'block';
+    document.getElementById('checkout-form-view').style.display = 'none';
+    document.getElementById('confirmation-view').style.display = 'none';
+}
+
+function showConfirmationView(orderId) {
+    document.getElementById('cart-list-view').style.display = 'none';
+    document.getElementById('checkout-form-view').style.display = 'none';
+    document.getElementById('confirmation-view').style.display = 'block';
+    document.getElementById('order-id').textContent = orderId;
+}
 
 
-/**
- * Handles form submission for the final order completion.
- */
-const handleOrderCompletion = (e) => {
-    e.preventDefault(); 
+// --- Checkout Logic ---
+
+function handleCheckout(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const address = document.getElementById('address').value;
+    const paymentMethod = document.getElementById('payment-method').value;
+    const total = document.getElementById('cart-total').textContent;
+
+    // Simulate order processing (e.g., sending data to a server)
+    console.log("Processing Order:", {
+        customer: name,
+        email: email,
+        shipping: address,
+        payment: paymentMethod,
+        items: cart,
+        total: `₹${total}`
+    });
+
+    // Simulate successful order placement
+    const orderId = 'SH-' + Date.now().toString().slice(-6);
     
-    const finalTotal = cartTotalSpan.textContent;
-    const paymentMethod = document.getElementById('payment').value;
-    const shippingAddress = document.getElementById('address').value;
-    const customerName = document.getElementById('name').value;
-    
-    // 1. Hide the cart/checkout form
-    cartSummary.classList.remove('visible');
-    showCartView(); 
-    
-    // 2. Display the confirmation message on the main page
-    checkoutConfirmation.innerHTML = `
-        <h3>🎉 Order Successful!</h3>
-        <p>Thank thank you, **${customerName}**! Your order totaling <strong>${finalTotal}</strong> has been placed.</p>
-        <p>Shipping to: ${shippingAddress} | Payment via: ${paymentMethod === 'cod' ? 'Cash on Delivery' : 'Card'}.</p>
-        <p>We have sent a confirmation email with tracking details. You can continue shopping below.</p>
-    `;
-    checkoutConfirmation.style.display = 'block';
-    
-    // 3. Clear the cart data and form
+    // Show confirmation
+    showConfirmationView(orderId);
+}
+
+function resetApp() {
+    // Reset cart state
     cart = [];
-    updateCartUI();
-    shippingForm.reset();
+    updateCartDisplay();
     
-    // 4. Scroll to the confirmation message
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-};
+    // Reset form fields
+    document.getElementById('checkout-form').reset();
+    
+    // Close sidebar and go back to category view
+    toggleCartSidebar(false);
+    showCategoryView();
+    toggleFilterSidebar(false);
+}
 
 
-// --- INITIALIZATION & EVENT LISTENERS ---
+// --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderCategoryGrid(); 
-    updateCartUI();
-
-    // Attach listeners
-    categoryGrid.addEventListener('click', handleCategoryCardClick);
-    filterToggleBtn.addEventListener('click', toggleFilterVisibility); 
-    
-    // Reset/Back buttons
-    resetFiltersBtn.addEventListener('click', handleResetFilters);
-    backBtn.addEventListener('click', handleResetFilters); 
-    
-    // Listener for sorting
-    sortBySelect.addEventListener('change', handleSortChange);
-
-    searchInput.addEventListener('input', handleSearchInput);
-    categoryFiltersContainer.addEventListener('change', handleFilterChange);
-    categoryFiltersContainer.addEventListener('click', handleGroupHeaderClick);
-
-    // Event delegation for the Add to Cart button on the product listing (UPDATED)
-    productListing.addEventListener('click', (e) => {
-        if (e.target.classList.contains('add-btn')) {
-            const productId = e.target.dataset.id;
-            const productCard = e.target.closest('.product-card');
-            handleAddToCart(productId, productCard);
-        }
-    });
-
-    // Cart visibility listeners
-    cartToggleBtn.addEventListener('click', toggleCartVisibility);
-    cartCloseBtn.addEventListener('click', toggleCartVisibility);
-    
-    // Checkout Navigation Handlers
-    proceedToInfoBtn.addEventListener('click', showCheckoutForm);
-    backToCartBtn.addEventListener('click', showCartView);
-    shippingForm.addEventListener('submit', handleOrderCompletion);
-    
-    // Event delegation for Cart Quantity Controls (UPDATED to use size attribute)
-    cartList.addEventListener('click', (e) => {
-        const target = e.target;
-        if (target.classList.contains('qty-decrease') || target.classList.contains('qty-increase')) {
-            const productId = target.dataset.id;
-            const size = target.dataset.size; // Get size from data attribute
-            const change = target.classList.contains('qty-increase') ? 1 : -1;
-            changeItemQuantity(productId, size, change);
-        }
-    });
+    // Initial content setup
+    renderCategories();
+    populateCategoryFilter();
+    updateCartDisplay();
+    updatePriceDisplay();
 });

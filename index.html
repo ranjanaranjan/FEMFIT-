@@ -3,169 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FemFit: Fashion Boutique</title>
+    <title>E-Commerce Storefront</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 </head>
-<body> 
+<body>
 
     <div class="sale-banner">
-        🔥 Winter Sale! Up to 50% OFF on Winterwear Collection! Shop Now! 🔥
+        🔥 WINTER SALE! Up to 50% OFF on Winterwear Collection! Shop Now! 🔥
     </div>
 
     <header class="main-header">
-        <h1 class="logo">FemFit</h1>
+        <h1 class="logo">StyleHub</h1>
         <div class="header-controls">
-            <input type="text" id="search-input" placeholder="Search products, categories..." class="search-bar">
+            <input type="text" id="search-input" class="search-bar" placeholder="Search products, categories..." onkeyup="filterProducts()">
             
-            <button id="cart-toggle-btn" class="cart-btn">
-                🛒 Cart (<span id="cart-count">0</span>)
+            <button class="cart-btn" onclick="toggleCartSidebar()">
+                <i class="fas fa-shopping-cart"></i> Cart (<span id="cart-count">0</span>)
             </button>
         </div>
     </header>
 
-    <div class="main-layout container">
+    <main class="container">
         
-        <button id="filter-toggle-btn" class="filter-toggle-btn">
-            <span class="hamburger-icon">☰</span>
-            Filter Options
+        <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">
+            <i class="fas fa-filter"></i> Filter Options
         </button>
-        
+
         <aside id="filter-sidebar" class="filter-sidebar">
-            <h3>Filter Products</h3>
-            <div class="filter-group">
-                <div id="category-filters"></div> 
-            </div>
-            <button id="reset-filters" class="reset-btn">View All Categories</button>
+            <h3><i class="fas fa-sliders-h"></i> Filters</h3>
+            
+            <section class="filter-section">
+                <h4>Category</h4>
+                <div id="category-filter">
+                    </div>
+            </section>
+
+            <section class="filter-section">
+                <h4>Price Range</h4>
+                <input type="range" id="price-range" min="1000" max="10000" value="10000" oninput="updatePriceDisplay()">
+                <p>Max Price: ₹<span id="price-display">10000</span></p>
+            </section>
+
+            <section class="filter-section">
+                <h4>Season/Style</h4>
+                <div id="style-filter">
+                    <label><input type="checkbox" name="style" value="Casual"> Casual</label><br>
+                    <label><input type="checkbox" name="style" value="Formal"> Formal</label><br>
+                    <label><input type="checkbox" name="style" value="Festive"> Festive</label><br>
+                    <label><input type="checkbox" name="style" value="Winter Wear"> Winter Wear</label><br>
+                </div>
+            </section>
+            
+            <button class="add-btn" onclick="applyFilters()">Apply Filters</button>
         </aside>
 
-        <main id="product-display">
-            <div id="checkout-confirmation" class="confirmation-message" style="display: none;"></div>
+        <div class="main-layout">
             
-            <div id="back-to-categories-container" style="display: none; padding: 10px 0;">
-                <button id="back-to-categories-btn" class="reset-btn" style="width: auto; padding: 10px 20px;">
-                    ← Back to All Categories
-                </button>
-            </div>
-
-            <div id="sort-controls" class="controls-bar" style="display: none;">
+            <div class="controls-bar">
                 <label for="sort-by">Sort By:</label>
-                <select id="sort-by">
+                <select id="sort-by" onchange="sortProducts()">
                     <option value="default">Default</option>
-                    <option value="name-asc">Name (A to Z)</option>
-                    <option value="price-asc">Price (Low to High)</option>
-                    <option value="price-desc">Price (High to Low)</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="name-asc">Name: A-Z</option>
                 </select>
             </div>
             
-            <section id="category-grid" class="initial-grid"></section> 
-            <section id="product-listing"></section>
-        </main>
-    </div>
+            <div id="category-grid">
+                </div>
 
-    <aside id="cart-summary" class="cart-sidebar">
-        <h3>Your Cart</h3>
-        
-        <div id="cart-view">
-            <ul id="cart-items" class="cart-list"></ul> 
-            
+            <div id="product-listing" style="display:none;">
+                </div>
+        </div>
+    </main>
+
+    <aside id="cart-sidebar" class="cart-sidebar">
+        <div id="cart-list-view">
+            <h2><i class="fas fa-shopping-bag"></i> Your Cart</h2>
+            <ul id="cart-list">
+                </ul>
             <div class="cart-footer">
-                <p>Subtotal: <span id="cart-total">0.00</span></p> 
-                <button id="proceed-to-info-btn" class="checkout-btn">Proceed to Checkout</button>
+                <p>Total: ₹<span id="cart-total">0.00</span></p>
+                <button class="checkout-btn" id="checkout-view-btn" onclick="showCheckoutView()">Proceed to Checkout</button>
             </div>
         </div>
 
-        <div id="checkout-form-view" style="display: none;">
-            <h4>Shipping & Payment</h4>
-            <form id="shipping-form" class="checkout-form">
-                
+        <div id="checkout-form-view" style="display:none;">
+            <h2><i class="fas fa-credit-card"></i> Checkout</h2>
+            <form id="checkout-form" class="checkout-form" onsubmit="handleCheckout(event)">
                 <label for="name">Full Name</label>
-                <input type="text" id="name" placeholder="John Doe" required>
+                <input type="text" id="name" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
 
                 <label for="address">Shipping Address</label>
-                <input type="text" id="address" placeholder="123 Fashion Lane, City, PIN" required>
+                <input type="text" id="address" required>
+                
+                <label for="city">City</label>
+                <input type="text" id="city" required>
 
-                <label for="payment">Payment Method</label>
-                <select id="payment" required>
-                    <option value="" disabled selected>Select an option</option>
+                <label for="payment-method">Payment Method</label>
+                <select id="payment-method" required>
                     <option value="card">Credit/Debit Card</option>
+                    <option value="upi">UPI/Net Banking</option>
                     <option value="cod">Cash on Delivery</option>
                 </select>
                 
                 <div class="cart-footer">
-                    <button type="button" id="back-to-cart-btn" class="back-btn">← Back to Cart</button>
-                    <button type="submit" id="complete-order-btn" class="checkout-btn">Complete Order</button>
+                    <button type="button" class="back-btn" onclick="showCartListView()">Back to Cart</button>
+                    <button type="submit" class="checkout-btn" id="complete-order-btn">Complete Order (₹<span id="order-total-display">0.00</span>)</button>
                 </div>
             </form>
         </div>
         
-        <button id="cart-close-btn" class="close-btn">×</button>
+        <div id="confirmation-view" style="display:none;">
+            <h2><i class="fas fa-check-circle"></i> Order Confirmed!</h2>
+            <div class="confirmation-message">
+                Thank you for your order! Your order #<span id="order-id"></span> has been placed successfully and will be shipped soon.
+            </div>
+            <p>A confirmation email has been sent to your inbox.</p>
+            <button class="checkout-btn" onclick="resetApp()">Continue Shopping</button>
+        </div>
     </aside>
 
     <footer class="site-footer">
         <div class="container footer-content">
-            
             <div class="footer-column about-us">
-                <h4>FemFit Boutique</h4>
-                <p>Curating the latest trends in women's fashion, delivered right to your doorstep. Style meets comfort and quality.</p>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook">📘</a>
-                    <a href="#" aria-label="Instagram">📸</a>
-                    <a href="#" aria-label="Twitter">🐦</a>
-                </div>
+                <h4>About StyleHub</h4>
+                <p>Your one-stop shop for the latest fashion in ethnic and western wear. We prioritize quality and customer satisfaction.</p>
+                <p>Contact: support@stylehub.com</p>
             </div>
-
             <div class="footer-column quick-links">
                 <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">New Arrivals</a></li>
+                    <li><a href="#">Sale</a></li>
+                    <li><a href="#">Size Chart</a></li>
                     <li><a href="#">Shipping & Returns</a></li>
-                    <li><a href="#">Size Guide</a></li>
-                    <li><a href="#">FAQ</a></li>
                 </ul>
             </div>
-
-            <div class="footer-column contact-info">
-                <h4>Contact</h4>
-                <p>Email: support@femfit.com</p>
-                <p>Phone: +91 98765 43210</p>
-                <p>Mon - Fri: 9:00 AM - 6:00 PM IST</p>
+            <div class="footer-column follow-us">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
             </div>
-
-            <div class="footer-column newsletter">
-                <h4>Newsletter</h4>
-                <p>Sign up to receive 10% off your first order!</p>
-                <form class="newsletter-form">
-                    <input type="email" placeholder="Enter your email" required>
-                    <button type="submit" class="subscribe-btn">Subscribe</button>
-                </form>
-            </div>
-
         </div>
-        
         <div class="footer-bottom">
-            <p>&copy; 2025 FemFit Boutique. All Rights Reserved. | Designed with 💖 by AI</p>
+            &copy; 2025 StyleHub. All rights reserved.
         </div>
     </footer>
-
-    <script id="product-data" type="application/json">
-        [
-            { "id": 7, "name": "Embroidered Velvet Kurti", "category": "Heavy Worked Kurti", "price": 8469.00, "image": "https://img.perniaspopupshop.com/catalog/product/a/n/ANAT032303_1.jpg?impolicy=detailimageprod", "sizes": ["S", "M", "L", "XL", "XXL"], "description": "Silk Kurti with heavy zardozi work for grand occasions.", "is_on_sale": true, "original_price": 9964.00 },
-            { "id": 1, "name": "High-Waist Baggy Denim", "category": "Baggy Jeans", "price": 6794.00, "image": "https://madish.in/wp-content/uploads/2025/01/retro-wide-leg-high-waist-jeans-jeans-madish-mid-blue-24-342378.jpg", "sizes": ["26", "28", "30", "32", "34"], "description": "Comfortable, high-waist loose fit denim in light blue wash." },
-            { "id": 2, "name": "Pure Kanjivaram Silk Saree", "category": "Silk Sarees", "price": 17210.00, "image": "https://www.banarasee.in/cdn/shop/files/IMG_8805_b6d44d8e-d143-462f-91c9-41b3a77cc27b_600x.jpg?v=1704952661", "sizes": ["Free"], "description": "Traditional silk saree with temple border, rich and luxurious texture." },
-            { "id": 3, "name": "Cotton Saree with Temple Border", "category": "Cotton Sarees", "price": 13587.00, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0fl2PlmXQQL1a9i7iw8qafq8ptLstIFKxnA&s", "sizes": ["Free"], "description": "Crisp cotton saree perfect for everyday wear." },
-            { "id": 4, "name": "Mom Fit White Denim", "category": "Mom Fit Jeans", "price": 4076.00, "image": "https://i.etsystatic.com/26573584/r/il/364b36/6135001193/il_fullxfull.6135001193_454f.jpg", "sizes": ["XS", "S", "M", "L", "XL"], "description": "Vintage style high-rise mom fit jeans in white." },
-            { "id": 5, "name": "Skinny Fit Black Jeans", "category": "Skinny Fit Jeans", "price": 5435.00, "image": "https://static.aceomni.cmsaceturtle.com/prod/product-image/aceomni/Wrangler/Monobrand/WWJN001251/WWJN001251_2.jpg", "sizes": ["26", "28", "30", "32", "34"], "description": "Classic black skinny fit with high stretch comfort." },
-            { "id": 6, "name": "Everyday Cotton Kurti", "category": "Cotton Kurti", "price": 3623.00, "image": "https://cdn.shopify.com/s/files/1/0072/2488/5346/files/2._PANKHURI_PINK_COTTON_JAAL_PRINT_STRAIGHT_PINTUCK_KURTA_480x480.webp?v=1715959219", "sizes": ["XS", "S", "M", "L", "XL", "XXL", "XXXL"], "description": "Breathable cotton kurti for daily office and casual wear." },
-            { "id": 8, "name": "Lavender Silk Kurti Set", "category": "Silk Kurti", "price": 14039.00, "image": "https://snazzyhunt.com/cdn/shop/files/SH-AF-ST-MYR-3155-LAV.jpg?v=1691596650", "sizes": ["XS", "S", "M", "L", "XL"], "description": "Elegant silk kurti with minimal thread work." },
-            { "id": 9, "name": "Heavy Worked Tissue Saree", "category": "Worked Sarees", "price": 18478.00, "image": "https://manishgharat.com/cdn/shop/files/1.jpg?v=1728562670", "sizes": ["Free"], "description": "Heavy sequin and embroidery work on light tissue fabric.", "is_on_sale": true, "original_price": 21739.00 },
-            { "id": 10, "name": "Slim Fit Puffer Jacket", "category": "Winterwear", "price": 7314.00, "image": "https://images-cdn.ubuy.co.in/65b9c49f96e3d32eb82bfdac-womens-winter-jacket-warm-overcoat-slim.jpg", "sizes": ["XS", "S", "M", "L", "XL"], "description": "Warm, waterproof puffer jacket with a flattering slim fit.", "is_on_sale": true, "original_price": 8605.00 },
-            { "id": 11, "name": "A-Line Skirt with Belt", "category": "Skirts", "price": 4982.00, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-BBf2DWTk2zHQdeVU-f8E-btyWC97bGpdNQ&s", "sizes": ["XS", "S", "M", "L", "XL"], "description": "High-waist A-line skirt with a structured finish." },
-            { "id": 12, "name": "Gold Plated Jewelry Set", "category": "Accessories", "price": 3170.00, "image": "https://images-cdn.ubuy.co.in/6938337402f822e0fc0e6f86-fasacco-gold-jewelry-set-trendy.jpg", "sizes": ["OS"], "description": "Matching necklace and earring set in a trendy gold finish." },
-            { "id": 13, "name": "Wine Colored Tissue Saree", "category": "Tissue Sarees", "price": 14946.00, "image": "https://cdn.sapnaaz.com/uploads/2024/12/22173051/WINE-1-1.webp", "sizes": ["Free"], "description": "Luxurious wine tissue saree with silver detailing." },
-            { "id": 14, "name": "White Linen Summer Dress", "category": "Dresses", "price": 7699.00, "image": "https://assets.ajio.com/medias/sys_master/root/20230524/XDZW/646e450b42f9e729d7ab93a4/-473Wx593H-469507059-white-MODEL.jpg", "sizes": ["XS", "S", "M", "L", "XL", "XXL"], "description": "Lightweight linen dress with puff sleeves, perfect for summer." }
-        ]
-    </script>
 
     <script src="script.js"></script>
 </body>
