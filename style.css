@@ -6,6 +6,8 @@
     --text-color: #333;
     --secondary-text: #666;
     --sale-color: #e74c3c; /* Red */
+    --footer-bg: #2c3e50; /* Darker background for footer */
+    --footer-text: #ecf0f1;
 }
 
 * {
@@ -18,6 +20,8 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
+    position: relative; 
+    overflow-x: hidden;
 }
 
 /* --- Header and Navigation --- */
@@ -64,7 +68,7 @@ header h1 {
 
 /* --- Back Button Styling --- */
 #back-button-container {
-    display: none; /* Hidden by default, shown by JS */
+    display: none; 
 }
 
 #back-button-container.back-btn-hidden {
@@ -93,7 +97,6 @@ main {
 
 .content-grid {
     display: grid;
-    /* Default desktop layout */
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
     gap: 20px;
 }
@@ -243,7 +246,7 @@ main {
     font-size: 1em;
     font-weight: bold;
     transition: background-color 0.2s;
-    margin-top: auto; /* Pushes the button to the bottom */
+    margin-top: auto; 
 }
 
 .add-btn:hover {
@@ -255,7 +258,7 @@ main {
     position: fixed;
     top: 0;
     right: 0;
-    width: 350px; /* Default desktop width */
+    width: 350px; 
     height: 100%;
     background-color: var(--card-background);
     box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
@@ -428,7 +431,7 @@ main {
 
 .confirmation-icon {
     font-size: 3em;
-    color: #2ecc71; /* Green */
+    color: #2ecc71; 
     margin-bottom: 15px;
 }
 
@@ -450,6 +453,79 @@ main {
     opacity: 1;
 }
 
+/* --- Footer Styling --- */
+#footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    padding-top: 30px;
+    margin-top: 40px;
+    z-index: 10;
+    position: relative;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 20px 20px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 20px;
+}
+
+.footer-section h4 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.footer-section p {
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li a {
+    color: var(--footer-text);
+    text-decoration: none;
+    font-size: 0.9em;
+    display: block;
+    margin-bottom: 5px;
+    transition: color 0.2s;
+}
+
+.footer-section ul li a:hover {
+    color: var(--secondary-color);
+}
+
+.social-icons i {
+    font-size: 1.5em;
+    margin-right: 15px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.social-icons i:hover {
+    color: var(--secondary-color);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 10px;
+    font-size: 0.8em;
+    background-color: #233140; /* Slightly darker shade */
+}
+
 /* ==================================== */
 /* MOBILE OPTIMIZATION MEDIA QUERIES    */
 /* ==================================== */
@@ -460,33 +536,27 @@ main {
         font-size: 1.5em;
     }
 
-    /* 1. Ensure Back Button is readable */
     .back-btn {
         font-size: 0.8em;
         padding: 5px 10px;
     }
 
-    /* 2. Full-width sidebars for mobile */
     .sidebar {
         width: 85%; 
     }
 
-    /* 3. Adjust main content padding */
     main {
         padding: 10px;
     }
     
-    /* 4. Category Grid uses more space */
     #category-grid {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
     
-    /* 5. Product Listing forced to 1 column for easy reading */
     #product-listing {
         grid-template-columns: 1fr;
     }
     
-    /* 6. Size selector tweak */
     .size-selector {
         flex-wrap: wrap; 
         gap: 8px;
@@ -496,16 +566,23 @@ main {
         flex-grow: 1; 
         text-align: center;
     }
+    
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    .footer-section {
+        text-align: center;
+        min-width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
-    /* Aggressive styling for very small phones */
     
     header {
         padding: 10px;
     }
 
-    /* Force all grids to 1 column for smallest phones */
     .content-grid {
         grid-template-columns: 1fr;
         gap: 15px;
