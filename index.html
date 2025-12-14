@@ -3,66 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Commerce Storefront</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>E-Commerce Store</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
-    <div class="sale-banner">
-        🔥 WINTER SALE! Up to 50% OFF on Winterwear Collection! Shop Now! 🔥
-    </div>
-
-    <header class="main-header">
-        <h1 class="logo">StyleHub</h1>
-        <div class="header-controls">
-            <input type="text" id="search-input" class="search-bar" placeholder="Search products, categories..." onkeyup="filterProducts()">
-            
-            <button class="cart-btn" onclick="toggleCartSidebar()">
-                <i class="fas fa-shopping-cart"></i> Cart (<span id="cart-count">0</span>)
+    <header>
+        <div id="back-button-container" class="back-btn-hidden">
+            <button class="back-btn" onclick="showCategoryView()">
+                <i class="fas fa-arrow-left"></i> Back to Categories
+            </button>
+        </div>
+        <h1>Fashion Store</h1>
+        <div class="nav-icons">
+            <button class="filter-toggle-btn" onclick="toggleFilterSidebar(true)"><i class="fas fa-filter"></i></button>
+            <button class="cart-btn" onclick="toggleCartSidebar(true)">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
             </button>
         </div>
     </header>
 
-    <main class="container">
+    <main>
         
-        <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">
-            <i class="fas fa-filter"></i> Filter Options
-        </button>
-
-        <aside id="filter-sidebar" class="filter-sidebar">
-            <h3><i class="fas fa-sliders-h"></i> Filters</h3>
+        <div id="winter-offer-banner" onclick="showWinterOffer()" 
+             style="text-align: center; margin-bottom: 25px; padding: 20px; background-color: var(--sale-color); border-radius: 8px; cursor: pointer;">
+            <h2 style="color: white; margin-bottom: 5px;">🔥 Limited Time Winter Offer! 🔥</h2>
+            <p style="color: #ffe0b2; font-size: 1.1em;">Shop Jackets, Dresses & More: **Up to 50% OFF! Click to view.**</p>
+        </div>
+        
+        <div id="filter-sidebar" class="sidebar">
+            <button class="close-btn" onclick="toggleFilterSidebar(false)"><i class="fas fa-times"></i></button>
+            <h2>Filters</h2>
             
-            <section class="filter-section">
-                <h4>Category</h4>
-                <div id="category-filter">
-                    </div>
-            </section>
-
-            <section class="filter-section">
-                <h4>Price Range</h4>
-                <input type="range" id="price-range" min="1000" max="10000" value="10000" oninput="updatePriceDisplay()">
-                <p>Max Price: ₹<span id="price-display">10000</span></p>
-            </section>
-
-            <section class="filter-section">
-                <h4>Season/Style</h4>
-                <div id="style-filter">
-                    <label><input type="checkbox" name="style" value="Casual"> Casual</label><br>
-                    <label><input type="checkbox" name="style" value="Formal"> Formal</label><br>
-                    <label><input type="checkbox" name="style" value="Festive"> Festive</label><br>
-                    <label><input type="checkbox" name="style" value="Winter Wear"> Winter Wear</label><br>
-                </div>
-            </section>
+            <div class="filter-group">
+                <h3>Search</h3>
+                <input type="text" id="search-input" placeholder="Search products..." onkeyup="applyFilters()">
+            </div>
             
-            <button class="add-btn" onclick="applyFilters()">Apply Filters</button>
-        </aside>
-
-        <div class="main-layout">
-            
-            <div class="controls-bar">
-                <label for="sort-by">Sort By:</label>
+            <div class="filter-group">
+                <h3>Sort By</h3>
                 <select id="sort-by" onchange="sortProducts()">
                     <option value="default">Default</option>
                     <option value="price-asc">Price: Low to High</option>
@@ -70,94 +51,91 @@
                     <option value="name-asc">Name: A-Z</option>
                 </select>
             </div>
-            
-            <div id="category-grid">
-                </div>
 
-            <div id="product-listing" style="display:none;">
-                </div>
-        </div>
-    </main>
-
-    <aside id="cart-sidebar" class="cart-sidebar">
-        <div id="cart-list-view">
-            <h2><i class="fas fa-shopping-bag"></i> Your Cart</h2>
-            <ul id="cart-list">
-                </ul>
-            <div class="cart-footer">
-                <p>Total: ₹<span id="cart-total">0.00</span></p>
-                <button class="checkout-btn" id="checkout-view-btn" onclick="showCheckoutView()">Proceed to Checkout</button>
+            <div class="filter-group">
+                <h3>Price Range (Max: ₹<span id="price-display">10000</span>)</h3>
+                <input type="range" id="price-range" min="500" max="10000" step="100" value="10000" oninput="updatePriceDisplay()">
             </div>
-        </div>
 
-        <div id="checkout-form-view" style="display:none;">
-            <h2><i class="fas fa-credit-card"></i> Checkout</h2>
-            <form id="checkout-form" class="checkout-form" onsubmit="handleCheckout(event)">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" required>
+            <div class="filter-group">
+                <h3>Category</h3>
+                <div id="category-filter">
+                    </div>
+            </div>
 
-                <label for="email">Email</label>
-                <input type="email" id="email" required>
-
-                <label for="address">Shipping Address</label>
-                <input type="text" id="address" required>
-                
-                <label for="city">City</label>
-                <input type="text" id="city" required>
-
-                <label for="payment-method">Payment Method</label>
-                <select id="payment-method" required>
-                    <option value="card">Credit/Debit Card</option>
-                    <option value="upi">UPI/Net Banking</option>
-                    <option value="cod">Cash on Delivery</option>
-                </select>
-                
-                <div class="cart-footer">
-                    <button type="button" class="back-btn" onclick="showCartListView()">Back to Cart</button>
-                    <button type="submit" class="checkout-btn" id="complete-order-btn">Complete Order (₹<span id="order-total-display">0.00</span>)</button>
+            <div class="filter-group">
+                <h3>Style/Group</h3>
+                <div id="style-filter">
+                    <label><input type="checkbox" name="filter-style" value="Casual" onchange="applyFilters()"> Casual</label><br>
+                    <label><input type="checkbox" name="filter-style" value="Formal" onchange="applyFilters()"> Formal</label><br>
+                    <label><input type="checkbox" name="filter-style" value="Festive" onchange="applyFilters()"> Festive</label><br>
+                    <label><input type="checkbox" name="filter-style" value="Winter Wear" onchange="applyFilters()"> Winter Wear</label><br>
                 </div>
-            </form>
+            </div>
+
+            <button class="reset-btn" onclick="resetFilters(); showCategoryView(); toggleFilterSidebar(false);">Reset & Clear</button>
         </div>
         
-        <div id="confirmation-view" style="display:none;">
-            <h2><i class="fas fa-check-circle"></i> Order Confirmed!</h2>
-            <div class="confirmation-message">
-                Thank you for your order! Your order #<span id="order-id"></span> has been placed successfully and will be shipped soon.
-            </div>
-            <p>A confirmation email has been sent to your inbox.</p>
-            <button class="checkout-btn" onclick="resetApp()">Continue Shopping</button>
-        </div>
-    </aside>
+        <section id="category-grid" class="content-grid">
+            </section>
 
-    <footer class="site-footer">
-        <div class="container footer-content">
-            <div class="footer-column about-us">
-                <h4>About StyleHub</h4>
-                <p>Your one-stop shop for the latest fashion in ethnic and western wear. We prioritize quality and customer satisfaction.</p>
-                <p>Contact: support@stylehub.com</p>
-            </div>
-            <div class="footer-column quick-links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="#">New Arrivals</a></li>
-                    <li><a href="#">Sale</a></li>
-                    <li><a href="#">Size Chart</a></li>
-                    <li><a href="#">Shipping & Returns</a></li>
+        <section id="product-listing" class="content-grid" style="display: none;">
+            </section>
+
+    </main>
+
+    <div id="cart-sidebar" class="sidebar">
+        <button class="close-btn" onclick="toggleCartSidebar(false)"><i class="fas fa-times"></i></button>
+        <h2>Your Cart</h2>
+        
+        <div id="cart-list-view">
+            <ul id="cart-list">
                 </ul>
+            <div class="cart-summary">
+                <strong>Total: ₹<span id="cart-total">0.00</span></strong>
             </div>
-            <div class="footer-column follow-us">
-                <h4>Follow Us</h4>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
+            <button id="checkout-view-btn" class="checkout-btn" onclick="showCheckoutView()">Proceed to Checkout</button>
+        </div>
+
+        <div id="checkout-form-view" style="display: none;">
+            <h3>Shipping and Payment</h3>
+            <form id="checkout-form" onsubmit="handleCheckout(event)">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+
+                <label for="address">Shipping Address:</label>
+                <textarea id="address" required></textarea>
+
+                <label for="payment-method">Payment Method:</label>
+                <select id="payment-method" required>
+                    <option value="cod">Cash on Delivery</option>
+                    <option value="card">Credit/Debit Card</option>
+                    <option value="upi">UPI</option>
+                </select>
+
+                <div class="cart-summary final-summary">
+                    <strong>Order Total: ₹<span id="order-total-display">0.00</span></strong>
                 </div>
+                <button type="submit" class="checkout-btn">Place Order</button>
+                <button type="button" class="back-to-cart-btn" onclick="showCartListView()">Back to Cart</button>
+            </form>
+        </div>
+
+        <div id="confirmation-view" style="display: none;">
+            <div class="confirmation-box">
+                <i class="fas fa-check-circle confirmation-icon"></i>
+                <h3>Order Placed Successfully!</h3>
+                <p>Your order ID is: <strong id="order-id"></strong></p>
+                <p>You will receive a confirmation email shortly.</p>
+                <button class="checkout-btn" onclick="resetApp()">Continue Shopping</button>
             </div>
         </div>
-        <div class="footer-bottom">
-            &copy; 2025 StyleHub. All rights reserved.
-        </div>
-    </footer>
+    </div>
+    
+    <div id="overlay" onclick="closeFilterIfOpen(event)"></div>
 
     <script src="script.js"></script>
 </body>

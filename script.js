@@ -1,26 +1,198 @@
 // script.js
 
-// Data for products and categories (Image paths are set to use the external URLs you provided)
+// Data for products and categories 
 const products = [
-    // Updated product images using new external URLs
-    { id: 1, name: "Aqua Embroidered Kurti", price: 1800, originalPrice: 2400, category: "Kurtis", group: "Festive", image: "https://snazzyhunt.com/cdn/shop/files/SH-AF-ST-MYR-3155-LAV.jpg?v=1691596650" }, // New URL for Kurti
-    { id: 2, name: "Black Silk Saree", price: 4500, originalPrice: 5000, category: "Sarees", group: "Formal", image: "https://manishgharat.com/cdn/shop/files/1.jpg?v=1728562670" }, // New URL for Saree
-    { id: 3, name: "Mustard Palazzo Set", price: 2900, originalPrice: null, category: "Suits", group: "Casual", image: "https://cdn.sapnaaz.com/uploads/2024/12/22173051/WINE-1-1.webp" }, // New URL for Suit
-    { id: 4, name: "Men's Navy Quilted Jacket", price: 3500, originalPrice: 5900, category: "Jackets", group: "Winter Wear", sale: true, image: "https://images-cdn.ubuy.co.in/65b9c49f96e3d32eb82bfdac-womens-winter-jacket-warm-overcoat-slim.jpg" }, // New URL for Jacket
-    { id: 5, name: "Pink Floral Lehenga", price: 7800, originalPrice: null, category: "Lehengas", group: "Festive", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-BBf2DWTk2zHQdeVU-f8E-btyWC97bGpdNQ&s" }, // New URL for Lehenga
-    { id: 6, name: "Grey Sweater Dress", price: 1999, originalPrice: 3999, category: "Sweaters", group: "Winter Wear", sale: true, image: "https://images-cdn.ubuy.co.in/6938337402f822e0fc0e6f86-fasacco-gold-jewelry-set-trendy.jpg" }, // New URL for Sweater Dress
-    { id: 7, name: "Denim Trousers", price: 1200, originalPrice: null, category: "Bottoms", group: "Casual", image: "https://www.ordinaree.com/cdn/shop/files/SV-20230723-0357_de076a15-0015-48c9-aa62-505fcbf62ee7.jpg?v=1756703329" }, // Using a spare URL for Trousers
-    { id: 8, name: "Red Party Dress", price: 2100, originalPrice: 3200, category: "Dresses", group: "Formal", image: "https://cdn.shopify.com/s/files/1/0640/5167/5359/files/Stan_Mirror_Interlink_Choker_480x480.png?v=1715671789" } // Using a spare URL for Dress
+    // --- KURTIS (3 products) ---
+    { 
+        id: 1, 
+        name: "Aqua Embroidered Kurti", 
+        price: 1800, 
+        originalPrice: 2400, 
+        category: "Kurtis", 
+        group: "Festive", 
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWJ1_sORjtwiYJVgc8ugFDnRP0W_byMMjVMw&s" 
+    }, 
+    { 
+        id: 10, 
+        name: "Elegant Block Print Kurti", 
+        price: 1950, 
+        originalPrice: null, 
+        category: "Kurtis", 
+        group: "Casual", 
+        image: "https://houseofkari.in/cdn/shop/files/9th-feb-20245607.jpg?v=1756990145&width=1500" 
+    },
+    { 
+        id: 11, 
+        name: "V-Neck Plain Kurti Set", 
+        price: 1400, 
+        originalPrice: 2000, 
+        category: "Kurtis", 
+        group: "Formal", 
+        image: "https://wholetex.sgp1.cdn.digitaloceanspaces.com/full/v-neck-fancy-plain-kurti-9149.jpg", 
+        sale: true
+    },
+    
+    // --- SAREES (3 products) ---
+    { 
+        id: 2, 
+        name: "Black Sequence Work Saree", 
+        price: 4500, 
+        originalPrice: 5000, 
+        category: "Sarees", 
+        group: "Formal", 
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi7nwj_u3eAkvmXszAwFM2Qgn86qyzIdOIrA&s" 
+    }, 
+    { 
+        id: 12, 
+        name: "Blue Designer Silk Saree", 
+        price: 5200, 
+        originalPrice: 6500, 
+        category: "Sarees", 
+        group: "Festive", 
+        image: "https://trendoye.com/cdn/shop/products/blue-designer-saree-TSNJ-MNS-SWRK6-67011_1200x.jpg?v=1680441921", 
+        sale: true
+    },
+    { 
+        id: 13, 
+        name: "Georgette Printed Saree", 
+        price: 3100, 
+        originalPrice: null, 
+        category: "Sarees", 
+        group: "Casual", 
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRw1ay076rQtUfhD2SqB4raDob6E9U3oGzerQ&s" 
+    }, 
+    
+    // --- JEANS (3 products) ---
+    { 
+        id: 7, 
+        name: "Dark Wash Skinny Jeans", 
+        price: 1550, 
+        originalPrice: null, 
+        category: "Jeans", 
+        group: "Casual", 
+        image: "https://sassafras.in/cdn/shop/files/SFJEAN0592-1_fbd456eb-0dfb-400c-abb2-07e09c80679c.jpg?v=1757493219" 
+    }, 
+    { 
+        id: 14, 
+        name: "High-Rise Baggy Jeans", 
+        price: 1999, 
+        originalPrice: 2500, 
+        category: "Jeans", 
+        group: "Casual", 
+        image: "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/27809704/2025/7/8/9001be77-f1f8-40fd-91c8-74bc1567d35b1751966994547-Bewakoof-Women-Straight-Fit-High-Rise--Baggy-Jeans-751175196-1.jpg" 
+    },
+    { 
+        id: 15, 
+        name: "Men's Slim Fit Denim", 
+        price: 2100, 
+        originalPrice: null, 
+        category: "Jeans", 
+        group: "Casual", 
+        image: "https://imagescdn.vanheusenindia.com/img/app/product/9/919749-11523703.jpg?auto=format&w=390" 
+    }, 
+
+    // --- SKIRTS (3 products) ---
+    { 
+        id: 9, 
+        name: "A-Line Cotton Skirt (Floral)", 
+        price: 1700, 
+        originalPrice: 2300, 
+        category: "Skirts", 
+        group: "Festive", 
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-BBf2DWTk2zHQdeVU-f8E-btyWC97bGpdNQ&s" 
+    },
+    { 
+        id: 16, 
+        name: "Green Ruffle Mini Skirt", 
+        price: 1099, 
+        originalPrice: null, 
+        category: "Skirts", 
+        group: "Casual", 
+        image: "https://sassafras.in/cdn/shop/products/SFSKRT3151-1.jpg?v=1757500409" 
+    },
+    { 
+        id: 17, 
+        name: "Indigo Blue Maxi Skirt", 
+        price: 1900, 
+        originalPrice: null, 
+        category: "Skirts", 
+        group: "Casual", 
+        image: "https://shop.jaipurkurti.com/cdn/shop/files/1A24SKIRR003-INDIGOBLUE_1.jpg?v=1722503972" 
+    },
+
+    // --- JACKETS (3 products) ---
+    { 
+        id: 4, 
+        name: "Navy Quilted Puffer Jacket", 
+        price: 3500, 
+        originalPrice: 5900, 
+        category: "Jackets", 
+        group: "Winter Wear", 
+        sale: true, 
+        image: "https://assets.myntassets.com/dpr_1.5,q_30,w_400,c_limit,fl_progressive/assets/images/2025/APRIL/24/wXMfy3CH_37b331f0a8cf4a529dc22f9ab99140e0.jpg" 
+    }, 
+    { 
+        id: 18, 
+        name: "Women's Denim Jacket", 
+        price: 2800, 
+        originalPrice: 3500, 
+        category: "Jackets", 
+        group: "Casual", 
+        image: "https://i.pinimg.com/564x/c5/ba/9b/c5ba9bd0b3b0b3ad086805e5eccba2d6.jpg" 
+    },
+    { 
+        id: 19, 
+        name: "Faux Leather Crop Jacket", 
+        price: 4100, 
+        originalPrice: 5500, 
+        category: "Jackets", 
+        group: "Formal", 
+        image: "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/31086511/2024/9/25/9d125632-d3c0-4ddd-a378-ffdf0371daa71727245541821-TBOJ-Women-Leather-Lightweight-Crop-Outdoor-Leather-Jacket-1-1.jpg" 
+    },
+
+    // --- DRESSES (3 products) ---
+    { 
+        id: 6, 
+        name: "Grey Sweater Knit Dress", 
+        price: 2199, 
+        originalPrice: 3999, 
+        category: "Dresses", 
+        group: "Winter Wear", 
+        sale: true, 
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvLMduB8pUcGQusFnO9kHBLg_so26enCAo0g&s" 
+    }, 
+    { 
+        id: 20, 
+        name: "Maroon Solid Maxi Dress", 
+        price: 1750, 
+        originalPrice: null, 
+        category: "Dresses", 
+        group: "Casual", 
+        image: "https://img.tatacliq.com/images/i16//437Wx649H/MP000000021635720_437Wx649H_202403211908471.jpeg" 
+    },
+    { 
+        id: 21, 
+        name: "Floral Print A-Line Dress", 
+        price: 1400, 
+        originalPrice: 2000, 
+        category: "Dresses", 
+        group: "Festive", 
+        image: "https://media.landmarkshops.in/cdn-cgi/image/h=831,w=615,q=85,fit=cover/max-new/1000015359425-OffWhite-IVORY-1000015359425_09-2100.jpg" 
+    },
+
+    // --- OTHER PRODUCTS ---
+    { id: 3, name: "Mustard Palazzo Set", price: 2900, originalPrice: null, category: "Suits", group: "Casual", image: "https://cdn.sapnaaz.com/uploads/2024/12/22173051/WINE-1-1.webp" }, 
+    { id: 5, name: "Pink Floral Lehenga", price: 7800, originalPrice: null, category: "Lehengas", group: "Festive", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-BBf2DWTk2zHQdeVU-f8E-btyWC97bGpdNQ&s" }, 
 ];
 
+// Reordered categories for display on the main grid 
 const categories = [
-    // Updated category images using new external URLs
     { name: "Kurtis", image: "https://images.meesho.com/images/products/508308303/a6n3y_512.webp?width=512", group: "Casual" },
     { name: "Sarees", image: "https://www.devnaagri.com/cdn/shop/files/CelebWebsite2292.jpg?v=1751947543", group: "Formal" },
-    { name: "Suits", image: "https://www.only.in/cdn/shop/files/900742401_g0.jpg?v=1745910181&width=2048", group: "Festive" },
-    { name: "Jackets", image: "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/24865792/2023/10/4/2f7f7251-0d0b-4cb5-b0ce-19acbe3f57771696415933351-Anayna-Women-Printed-A-Line-Flared-Cotton-Maxi-Skirt-3831696-7.jpg", group: "Winter Wear" },
-    { name: "Lehengas", image: "https://i.pinimg.com/564x/a1/16/d4/a116d40a67ba038bad52bbad20c49a76.jpg", group: "Festive" },
-    { name: "Dresses", image: "https://www.ordinaree.com/cdn/shop/files/SV-20230723-0357_de076a15-0015-48c9-aa62-505fcbf62ee7.jpg?v=1756703329", group: "Formal" }
+    { name: "Jeans", image: "https://www.only.in/cdn/shop/files/900742401_g0.jpg?v=1745910181&width=2048", group: "Casual" }, 
+    { name: "Skirts", image: "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/24865792/2023/10/4/2f7f7251-0d0b-4cb5-b0ce-19acbe3f57771696415933351-Anayna-Women-Printed-A-Line-Flared-Cotton-Maxi-Skirt-3831696-7.jpg", group: "Casual" }, 
+    { name: "Jackets", image: "https://i.pinimg.com/564x/a1/16/d4/a116d40a67ba038bad52bbad20c49a76.jpg", group: "Winter Wear" },
+    { name: "Dresses", image: "https://www.ordinaree.com/cdn/shop/files/SV-20230723-0357_de076a15-0015-48c9-aa62-505fcbf62ee7.jpg?v=1756703329", group: "Formal" } 
 ];
 
 let cart = [];
@@ -39,6 +211,7 @@ function renderCategories() {
         
         let saleBadge = '';
         if (cat.group === "Winter Wear") {
+            // This is the badge that appears on the category card itself
             saleBadge = '<div class="winter-offer-text">Up to 50% OFF!</div>';
         }
 
@@ -70,6 +243,7 @@ function renderProductListing(productList) {
 
         const sizeOptionsHTML = generateSizeOptions(product.id);
 
+        // This is the sale badge on individual product cards
         const saleBadge = product.sale ? '<span class="sale-badge">SALE</span>' : '';
 
         card.innerHTML = `
@@ -109,6 +283,10 @@ function showProductsByCategory(categoryName) {
     document.getElementById('category-grid').style.display = 'none';
     document.getElementById('product-listing').style.display = 'grid';
     
+    // SHOW BACK BUTTON
+    document.getElementById('back-button-container').style.display = 'flex';
+    document.getElementById('back-button-container').classList.remove('back-btn-hidden');
+
     // Clear the search bar when switching from category view
     document.getElementById('search-input').value = ''; 
     
@@ -124,25 +302,137 @@ function showProductsByCategory(categoryName) {
     applyFilters();
 }
 
+/**
+ * Ensures navigation goes back to the category grid view.
+ */
 function showCategoryView() {
     currentCategory = null;
     document.getElementById('product-listing').style.display = 'none';
     document.getElementById('category-grid').style.display = 'grid';
+    
+    // HIDE BACK BUTTON
+    document.getElementById('back-button-container').style.display = 'none';
+    document.getElementById('back-button-container').classList.add('back-btn-hidden');
+    
     // Reset filters on returning to category view
     resetFilters();
-    renderProductListing(products); // Render all products in the background
 }
+
+/**
+ * NEW FUNCTION: Shows products marked as "Winter Wear" (Jackets/Dresses)
+ */
+function showWinterOffer() {
+    const winterWearGroup = "Winter Wear";
+    
+    // Switch the view to the Product Listing grid
+    document.getElementById('category-grid').style.display = 'none';
+    document.getElementById('product-listing').style.display = 'grid';
+    
+    // Show the Back button
+    document.getElementById('back-button-container').style.display = 'flex';
+    document.getElementById('back-button-container').classList.remove('back-btn-hidden');
+
+    // Reset filters first (clears search, price, and category)
+    resetFilters(); 
+
+    // Explicitly check the 'Winter Wear' style filter 
+    const winterWearCheckbox = document.querySelector(`#style-filter input[value="${winterWearGroup}"]`);
+    if (winterWearCheckbox) {
+        winterWearCheckbox.checked = true;
+    }
+    
+    // Apply the filters to render the products (filtered by 'Winter Wear' style)
+    currentCategory = null; 
+    applyFilters();
+}
+
+
+// --- Filter Interaction ---
+
+function toggleFilterSidebar(show = null) {
+    const sidebar = document.getElementById('filter-sidebar');
+    const overlay = document.getElementById('overlay');
+    if (show === null) {
+        sidebar.classList.toggle('visible');
+    } else if (show) {
+        sidebar.classList.add('visible');
+    } else {
+        sidebar.classList.remove('visible');
+    }
+    // Toggle overlay visibility
+    overlay.style.display = sidebar.classList.contains('visible') || document.getElementById('cart-sidebar').classList.contains('visible') ? 'block' : 'none';
+}
+
+function toggleCartSidebar(show = null) {
+    const sidebar = document.getElementById('cart-sidebar');
+    const overlay = document.getElementById('overlay');
+    if (show === null) {
+        sidebar.classList.toggle('visible');
+    } else if (show) {
+        sidebar.classList.add('visible');
+    } else {
+        sidebar.classList.remove('visible');
+    }
+    // Always default to cart list view when opening/closing
+    showCartListView(); 
+    // Toggle overlay visibility
+    overlay.style.display = sidebar.classList.contains('visible') || document.getElementById('filter-sidebar').classList.contains('visible') ? 'block' : 'none';
+}
+
+/**
+ * Hides both the filter and cart sidebars if the click occurred outside of them (or on the overlay).
+ */
+function closeFilterIfOpen(event) {
+    // If the click happened on the overlay itself:
+    if (event.target.id === 'overlay') {
+        toggleFilterSidebar(false);
+        toggleCartSidebar(false);
+        // Turn off overlay visibility immediately
+        document.getElementById('overlay').style.display = 'none';
+    }
+    
+    // The rest of the logic handles clicks inside or outside the sidebar buttons/containers
+    const filterSidebar = document.getElementById('filter-sidebar');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const filterToggleBtn = document.querySelector('.filter-toggle-btn');
+    const cartToggleBtn = document.querySelector('.cart-btn'); 
+
+    const isFilterOpen = filterSidebar.classList.contains('visible');
+    const isCartOpen = cartSidebar.classList.contains('visible');
+    
+    // Helper function to check if the target is part of an element or its descendants
+    const isTargetInside = (element, target) => element.contains(target) || target.closest(`.${element.className.split(' ')[0]}`) === element;
+    
+    if (isFilterOpen) {
+        if (!isTargetInside(filterSidebar, event.target) && event.target !== filterToggleBtn) {
+            if (!event.target.closest('.cart-btn')) {
+                toggleFilterSidebar(false); 
+            }
+        }
+    }
+
+    if (isCartOpen) {
+        if (!isTargetInside(cartSidebar, event.target) && event.target !== cartToggleBtn) {
+            if (!event.target.closest('.filter-toggle-btn')) {
+                 toggleCartSidebar(false); 
+            }
+        }
+    }
+}
+
 
 // --- Filtering and Sorting ---
 
 function populateCategoryFilter() {
     const filterDiv = document.getElementById('category-filter');
     filterDiv.innerHTML = '';
+    // Use unique product categories, not the display categories, for the filter checkbox list
     const uniqueCategories = [...new Set(products.map(p => p.category))].sort();
 
     uniqueCategories.forEach(cat => {
+        // Attach applyFilters to the change event
         filterDiv.innerHTML += `
-            <label><input type="checkbox" name="filter-category" value="${cat}"> ${cat}</label><br>
+            <label><input type="checkbox" name="filter-category" value="${cat}" onchange="applyFilters()"> ${cat}</label><br>
         `;
     });
 }
@@ -150,6 +440,7 @@ function populateCategoryFilter() {
 function updatePriceDisplay() {
     const priceRange = document.getElementById('price-range');
     document.getElementById('price-display').textContent = priceRange.value;
+    applyFilters(); // Apply filters immediately when price range changes
 }
 
 function applyFilters() {
@@ -172,7 +463,6 @@ function applyFilters() {
         
         const matchesStyle = selectedStyles.length === 0 || selectedStyles.includes(product.group);
         
-        // If coming from a category click, only show that category's products
         const matchesCurrentCategory = currentCategory === null || product.category === currentCategory;
 
         return matchesSearch && matchesPrice && matchesCategory && matchesStyle && matchesCurrentCategory;
@@ -180,11 +470,15 @@ function applyFilters() {
 
     sortProducts(filteredProducts);
     
-    // If the filter is applied, and no category was specifically clicked, switch to product view
-    if (currentCategory === null && (searchVal || selectedCategories.length > 0 || selectedStyles.length > 0 || maxPrice < 10000)) {
+    // View switching logic:
+    const filtersActive = searchVal || selectedCategories.length > 0 || selectedStyles.length > 0 || maxPrice < 10000;
+
+    if (currentCategory === null && filtersActive) {
+        // If we are on the main page but apply a filter, show product listing
         document.getElementById('category-grid').style.display = 'none';
         document.getElementById('product-listing').style.display = 'grid';
-    } else if (currentCategory === null && searchVal === '' && selectedCategories.length === 0 && selectedStyles.length === 0 && maxPrice === 10000) {
+        document.getElementById('back-button-container').style.display = 'flex'; 
+    } else if (currentCategory === null && !filtersActive) {
         // If all filters and search are clear, show category view
         showCategoryView(); 
     }
@@ -193,21 +487,10 @@ function applyFilters() {
 function sortProducts(productList = null) {
     let listToSort = productList || products;
 
-    // If productList is null, we need to re-apply filters first to get the current list
     if (productList === null) {
-        const searchVal = document.getElementById('search-input').value.toLowerCase();
-        const maxPrice = parseInt(document.getElementById('price-range').value);
-        const selectedCategories = Array.from(document.querySelectorAll('#category-filter input:checked')).map(input => input.value);
-        const selectedStyles = Array.from(document.querySelectorAll('#style-filter input:checked')).map(input => input.value);
-
-        listToSort = products.filter(product => {
-            const matchesSearch = product.name.toLowerCase().includes(searchVal) || product.category.toLowerCase().includes(searchVal);
-            const matchesPrice = product.price <= maxPrice;
-            const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
-            const matchesStyle = selectedStyles.length === 0 || selectedStyles.includes(product.group);
-            const matchesCurrentCategory = currentCategory === null || product.category === currentCategory;
-            return matchesSearch && matchesPrice && matchesCategory && matchesStyle && matchesCurrentCategory;
-        });
+        // If no list is passed, we need to get the currently filtered list
+        applyFilters(); 
+        return;
     }
 
     const sortType = document.getElementById('sort-by').value;
@@ -224,7 +507,6 @@ function sortProducts(productList = null) {
             break;
         case 'default':
         default:
-            // Optional: Sort by ID or original index for stable default view
             listToSort.sort((a, b) => a.id - b.id);
             break;
     }
@@ -235,15 +517,18 @@ function sortProducts(productList = null) {
 function resetFilters() {
     document.getElementById('search-input').value = '';
     document.getElementById('price-range').value = 10000;
-    updatePriceDisplay();
+    document.getElementById('price-display').textContent = 10000;
     
     document.querySelectorAll('#category-filter input[type="checkbox"]').forEach(input => input.checked = false);
     document.querySelectorAll('#style-filter input[type="checkbox"]').forEach(input => input.checked = false);
     document.getElementById('sort-by').value = 'default';
+    
+    // Re-apply filters to clear the product display
+    applyFilters(); 
 }
 
 
-// --- Cart Functions ---
+// --- Cart Functions (unchanged logic) ---
 
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
@@ -335,24 +620,7 @@ function updateCartDisplay() {
     document.getElementById('order-total-display').textContent = total.toFixed(2);
 }
 
-// --- Sidebar and View Toggle Functions ---
-
-function toggleCartSidebar(show = null) {
-    const sidebar = document.getElementById('cart-sidebar');
-    if (show === null) {
-        sidebar.classList.toggle('visible');
-    } else if (show) {
-        sidebar.classList.add('visible');
-    } else {
-        sidebar.classList.remove('visible');
-    }
-    // Always default to cart list view when opening/closing
-    showCartListView(); 
-}
-
-function toggleFilterSidebar() {
-    document.getElementById('filter-sidebar').classList.toggle('visible');
-}
+// --- Sidebar and View Toggle Functions (unchanged logic) ---
 
 function showCheckoutView() {
     if (cart.length === 0) {
@@ -378,7 +646,7 @@ function showConfirmationView(orderId) {
 }
 
 
-// --- Checkout Logic ---
+// --- Checkout Logic (unchanged logic) ---
 
 function handleCheckout(event) {
     event.preventDefault();
@@ -389,7 +657,7 @@ function handleCheckout(event) {
     const paymentMethod = document.getElementById('payment-method').value;
     const total = document.getElementById('cart-total').textContent;
 
-    // Simulate order processing (e.g., sending data to a server)
+    // Simulate order processing
     console.log("Processing Order:", {
         customer: name,
         email: email,
@@ -404,6 +672,9 @@ function handleCheckout(event) {
     
     // Show confirmation
     showConfirmationView(orderId);
+    
+    // Clear the cart after confirmed order
+    cart = []; 
 }
 
 function resetApp() {
@@ -421,7 +692,7 @@ function resetApp() {
 }
 
 
-// --- Initialization ---
+// --- Initialization and Event Listeners ---
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initial content setup
