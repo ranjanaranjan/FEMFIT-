@@ -1,22 +1,26 @@
-// Data for products and categories
+// script.js
+
+// Data for products and categories (Image paths are set to use the external URLs you provided)
 const products = [
-    { id: 1, name: "Aqua Embroidered Kurti", price: 1800, originalPrice: 2400, category: "Kurtis", group: "Festive", image: "https://via.placeholder.com/300x400/81C784/ffffff?text=Aqua+Kurti" },
-    { id: 2, name: "Black Silk Saree", price: 4500, originalPrice: 5000, category: "Sarees", group: "Formal", image: "https://via.placeholder.com/300x400/000000/ffffff?text=Black+Saree" },
-    { id: 3, name: "Mustard Palazzo Set", price: 2900, originalPrice: null, category: "Suits", group: "Casual", image: "https://via.placeholder.com/300x400/FFC107/000000?text=Mustard+Suit" },
-    { id: 4, name: "Men's Navy Quilted Jacket", price: 3500, originalPrice: 5900, category: "Jackets", group: "Winter Wear", sale: true, image: "https://via.placeholder.com/300x400/0D47A1/ffffff?text=Navy+Jacket" },
-    { id: 5, name: "Pink Floral Lehenga", price: 7800, originalPrice: null, category: "Lehengas", group: "Festive", image: "https://via.placeholder.com/300x400/F48FB1/ffffff?text=Pink+Lehenga" },
-    { id: 6, name: "Grey Sweater Dress", price: 1999, originalPrice: 3999, category: "Sweaters", group: "Winter Wear", sale: true, image: "https://via.placeholder.com/300x400/9E9E9E/ffffff?text=Grey+Dress" },
-    { id: 7, name: "Denim Trousers", price: 1200, originalPrice: null, category: "Bottoms", group: "Casual", image: "https://via.placeholder.com/300x400/42A5F5/ffffff?text=Denim+Pants" },
-    { id: 8, name: "Red Party Dress", price: 2100, originalPrice: 3200, category: "Dresses", group: "Formal", image: "https://via.placeholder.com/300x400/F44336/ffffff?text=Red+Dress" }
+    // Updated product images using new external URLs
+    { id: 1, name: "Aqua Embroidered Kurti", price: 1800, originalPrice: 2400, category: "Kurtis", group: "Festive", image: "https://snazzyhunt.com/cdn/shop/files/SH-AF-ST-MYR-3155-LAV.jpg?v=1691596650" }, // New URL for Kurti
+    { id: 2, name: "Black Silk Saree", price: 4500, originalPrice: 5000, category: "Sarees", group: "Formal", image: "https://manishgharat.com/cdn/shop/files/1.jpg?v=1728562670" }, // New URL for Saree
+    { id: 3, name: "Mustard Palazzo Set", price: 2900, originalPrice: null, category: "Suits", group: "Casual", image: "https://cdn.sapnaaz.com/uploads/2024/12/22173051/WINE-1-1.webp" }, // New URL for Suit
+    { id: 4, name: "Men's Navy Quilted Jacket", price: 3500, originalPrice: 5900, category: "Jackets", group: "Winter Wear", sale: true, image: "https://images-cdn.ubuy.co.in/65b9c49f96e3d32eb82bfdac-womens-winter-jacket-warm-overcoat-slim.jpg" }, // New URL for Jacket
+    { id: 5, name: "Pink Floral Lehenga", price: 7800, originalPrice: null, category: "Lehengas", group: "Festive", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-BBf2DWTk2zHQdeVU-f8E-btyWC97bGpdNQ&s" }, // New URL for Lehenga
+    { id: 6, name: "Grey Sweater Dress", price: 1999, originalPrice: 3999, category: "Sweaters", group: "Winter Wear", sale: true, image: "https://images-cdn.ubuy.co.in/6938337402f822e0fc0e6f86-fasacco-gold-jewelry-set-trendy.jpg" }, // New URL for Sweater Dress
+    { id: 7, name: "Denim Trousers", price: 1200, originalPrice: null, category: "Bottoms", group: "Casual", image: "https://www.ordinaree.com/cdn/shop/files/SV-20230723-0357_de076a15-0015-48c9-aa62-505fcbf62ee7.jpg?v=1756703329" }, // Using a spare URL for Trousers
+    { id: 8, name: "Red Party Dress", price: 2100, originalPrice: 3200, category: "Dresses", group: "Formal", image: "https://cdn.shopify.com/s/files/1/0640/5167/5359/files/Stan_Mirror_Interlink_Choker_480x480.png?v=1715671789" } // Using a spare URL for Dress
 ];
 
 const categories = [
-    { name: "Kurtis", image: "https://via.placeholder.com/500x500/81C784/ffffff?text=Kurtis", group: "Casual" },
-    { name: "Sarees", image: "https://via.placeholder.com/500x500/000000/ffffff?text=Sarees", group: "Formal" },
-    { name: "Suits", image: "https://via.placeholder.com/500x500/FFC107/000000?text=Suits", group: "Festive" },
-    { name: "Jackets", image: "https://via.placeholder.com/500x500/0D47A1/ffffff?text=Jackets", group: "Winter Wear" },
-    { name: "Lehengas", image: "https://via.placeholder.com/500x500/F48FB1/ffffff?text=Lehengas", group: "Festive" },
-    { name: "Dresses", image: "https://via.placeholder.com/500x500/F44336/ffffff?text=Dresses", group: "Formal" }
+    // Updated category images using new external URLs
+    { name: "Kurtis", image: "https://images.meesho.com/images/products/508308303/a6n3y_512.webp?width=512", group: "Casual" },
+    { name: "Sarees", image: "https://www.devnaagri.com/cdn/shop/files/CelebWebsite2292.jpg?v=1751947543", group: "Formal" },
+    { name: "Suits", image: "https://www.only.in/cdn/shop/files/900742401_g0.jpg?v=1745910181&width=2048", group: "Festive" },
+    { name: "Jackets", image: "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/24865792/2023/10/4/2f7f7251-0d0b-4cb5-b0ce-19acbe3f57771696415933351-Anayna-Women-Printed-A-Line-Flared-Cotton-Maxi-Skirt-3831696-7.jpg", group: "Winter Wear" },
+    { name: "Lehengas", image: "https://i.pinimg.com/564x/a1/16/d4/a116d40a67ba038bad52bbad20c49a76.jpg", group: "Festive" },
+    { name: "Dresses", image: "https://www.ordinaree.com/cdn/shop/files/SV-20230723-0357_de076a15-0015-48c9-aa62-505fcbf62ee7.jpg?v=1756703329", group: "Formal" }
 ];
 
 let cart = [];
@@ -40,7 +44,7 @@ function renderCategories() {
 
         card.innerHTML = `
             ${saleBadge}
-            <img src="${cat.image}" alt="${cat.name}">
+            <img src="${cat.image}" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x400/CCCCCC/808080?text=Image+Missing'" alt="${cat.name}">
             <div class="category-title">${cat.name}</div>
         `;
         grid.appendChild(card);
@@ -70,7 +74,7 @@ function renderProductListing(productList) {
 
         card.innerHTML = `
             ${saleBadge}
-            <img src="${product.image}" alt="${product.name}">
+            <img src="${product.image}" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x400/CCCCCC/808080?text=Image+Missing'" alt="${product.name}">
             <h3>${product.name}</h3>
             <div class="price-container">${priceHTML}</div>
             
@@ -308,7 +312,7 @@ function updateCartDisplay() {
         const listItem = document.createElement('li');
         listItem.innerHTML = `
             <div style="display:flex; align-items: center; gap: 10px;">
-                <img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                <img src="${item.image}" onerror="this.onerror=null;this.src='https://via.placeholder.com/50x50/CCCCCC/808080?text=Item';" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
                 <div class="cart-item-details">
                     <span class="item-name">${item.name}</span>
                     <span class="item-size">Size: ${item.size}</span>

@@ -623,7 +623,7 @@ body {
     
     /* 2. FILTER TOGGLE FIX: Move the button off the sticky header and back into the normal flow */
     .filter-toggle-btn {
-        position: static; 
+        position: static; /* Switch from fixed to static */
         top: auto; 
         left: auto;
         
